@@ -1,21 +1,19 @@
 # -*- mode: python -*-
-import package1.packaging.pyinstaller_specs as specs
+
 block_cipher = None
 
-a = Analysis(['main_tracker.py'],
-             pathex=[os.path.join('.'),],
-             binaries=None,
-             datas=specs.datas,
-             hiddenimports=specs.hiddenimports,
+
+a = Analysis(['main.py'],
+             pathex=['/vagrant/test_nuitka'],
+             binaries=[],
+             datas=[],
+             hiddenimports=[],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],
              win_no_prefer_redirects=False,
              win_private_assemblies=False,
              cipher=block_cipher)
-
-a = specs.processAnalysis(a)
-
 pyz = PYZ(a.pure, a.zipped_data,
              cipher=block_cipher)
 exe = EXE(pyz,

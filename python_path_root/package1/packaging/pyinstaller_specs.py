@@ -3,8 +3,6 @@ import os
 datas = [ #TODO: add a data file
 ]
 
-datas += rgbd_specs.datas
-
 
 def processAnalysis(a, exclude_mpl=True):
     return a
