@@ -36,6 +36,9 @@ parser.add_argument('--clean-python', nargs='?', const=True, default=False,
 parser.add_argument('--patch-swig', nargs='?', const=True, default=False,
                     help='rewrite swig python modules for nuitka.')
 
+parser.add_argument('--recurse-none', nargs='?', const=True, default=False,
+                    help='do not recurse dependencies, see nuitka help.')
+
 parser.add_argument('--recurse-to', type=str,
                     help='package to recurse to.')
 
@@ -144,6 +147,9 @@ if arguments.compile:
 
             if arguments.recurse_all is not None:
                 args.extend(['--recurse-all'])
+
+            if arguments.recurse_none is not None:
+                args.extend(['--recurse-none'])
 
             logger.info('nuitka args: {}'.format(args))
 
