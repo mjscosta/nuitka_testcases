@@ -13,5 +13,12 @@ sudo apt-get install swig
 sudo apt-get install cmake
 ```
 
-git clone git@github.com:mjscosta/nuitka_testcases.git
+`git clone git@github.com:mjscosta/nuitka_testcases.git`
 
+*Restore deleted python source files from git*
+```
+git checkout -- `git status -s | grep -E "^ D" | cut -d ' ' -f3`
+
+
+git ls-files -d | xargs git checkout --
+```

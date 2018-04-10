@@ -145,10 +145,10 @@ if arguments.compile:
             if arguments.recurse_dir is not None:
                 args.extend(['--recurse-directory', arguments.recurse_dir])
 
-            if arguments.recurse_all is not None:
+            if arguments.recurse_all:
                 args.extend(['--recurse-all'])
 
-            if arguments.recurse_none is not None:
+            if arguments.recurse_none:
                 args.extend(['--recurse-none'])
 
             logger.info('nuitka args: {}'.format(args))
@@ -172,7 +172,7 @@ if arguments.clean_modules:
     for parent_dir, dirs, files in os.walk(arguments.root_dir):
         nuitka_compiled_modules = [f for f in files 
             if os.path.splitext(f)[1] in ['.so', '.pyd'] 
-            and not f[:1] == '_'] # do not delete _<name>.so modules, swig
+            and not f[:1] == '_'] # do not delete _<name>.so modules, swig modules
             
         if len(nuitka_compiled_modules) > 0:
             logger.debug('nuitka compiled extension modules: {}.'
@@ -185,7 +185,7 @@ if arguments.clean_modules:
                 os.remove(nuitka_compiled_module_full_path)
 
 if arguments.clean_python:
-    logger.debug('about to clean python files compiled to extension modules.')
+    logger.debug('about to clean python files (.py, .pyc) compiled to extension modules.')
     for parent_dir, dirs, files in os.walk(arguments.root_dir):
         nuitka_compiled_modules = [os.path.splitext(f)[0] for f in files if os.path.splitext(f)[1] in ['.so', '.pyd']]
 
@@ -205,9 +205,7 @@ if arguments.clean_python:
                 logger.info('Deleting python module {}.'
                     .format(python_module_full_path))
                 os.remove(python_module_full_path + '.py')
-                try:
+                if os.path.exists(python_module_full_path + '.pyc'):
                     os.remove(python_module_full_path + '.pyc')
-                except OSError:
-                    pass                
 
 
