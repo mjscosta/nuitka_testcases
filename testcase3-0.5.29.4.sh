@@ -16,7 +16,7 @@ mkdir $OUTPUT_DIR
 cp -r python_path_root3/* $OUTPUT_DIR
 
 cd $OUTPUT_DIR
-nuitka --module ./package1
+nuitka --module package1 --recurse-directory=package1
 
 # clean python code
 rm -rf package1/

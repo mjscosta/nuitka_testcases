@@ -16,28 +16,29 @@ cmake ../python_path_root/package1/subpackage3/swigpkg
 make all
 cd ..
 
-mkdir output2
-cp -r python_path_root/* output2
+OUTPUT_DIR=output$TEST_CASE
+mkdir $OUTPUT_DIR
+cp -r python_path_root/* $OUTPUT_DIR
 
-#./bin/nuitka_compile_modules.py --compile --clean-python --clean --recurse-none --root-dir output1
+cd $OUTPUT_DIR
+nuitka --module package1 --recurse-directory=package1
 
-cd output2
-nuitka --module ./package1
 
 # delete the modules that will be replaced by nuitka, leave only the swig module.
 rm -rf package1/subpackage1
-rm -rf package1/subpackage2/
-rm package1/*.py
+rm -rf package1/subpackage2
 rm -rf package1/packaging
+rm package1/*.py
 
+# delete all files except the .so from swig.
+find package1 -type f | grep -v ".*so$" | xargs rm
 
-#cd output2
-#export PYTHONPATH=`pwd`
-#cd ..
+export PYTHONPATH=`pwd`
+cd ..
 
-#echo "test main.py:"
-#echo
-#echo
-#python main.py
+echo "test main.py:"
+echo
+echo
+python main.py
 
 
