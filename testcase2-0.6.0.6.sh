@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -xv
+
 TEST_CASE=2
 
 echo "Nuitka testcase $TEST_CASE:"
@@ -17,21 +19,24 @@ CMAKE_GENERATOR=""
 
 case "$(uname -s)" in
     Linux* | Darwin* )
-        CMAKE_GENERATOR='"Unix Makefiles"'
+        CMAKE_GENERATOR='Unix Makefiles'
+        cmake -G "$CMAKE_GENERATOR" ../python_path_root/package1/subpackage3/swigpkg/ -DCMAKE_BUILD_TYPE=Release
+        cmake --build . --target all
         ;;
     MINGW* | CYGWIN* )
-        CMAKE_GENERATOR='"NMake Makefiles JOM"'
+        CMAKE_GENERATOR='NMake Makefiles JOM'
+        WIN_PWD=$(cmd //C cd)
+        cmd //C call 'C:\Program Files (x86)\Microsoft Visual C++ Build Tools\vcbuildtools.bat' amd64 \& cd $WIN_PWD \& \
+        cmake -G "$CMAKE_GENERATOR" '..\python_path_root\package1\subpackage3\swigpkg\' -DCMAKE_BUILD_TYPE=Release \& \
+        cmake --build . --target all
         ;;
     *)
         echo "Unknown OS/System. Unnsble to test."
 esac
 
-[ -z $CMAKE_GENERATOR ] && exit 1
+[[ -z $CMAKE_GENERATOR ]] && exit 1
 
 echo $CMAKE_GENERATOR
-
-cmake -G $CMAKE_GENERATOR ../python_path_root/package1/subpackage3/swigpkg/ -DCMAKE_BUILD_TYPE=Release
-cmake --build . --target all
 
 cd ..
 
@@ -50,9 +55,9 @@ rm -rf package1/subpackage2
 rm -rf package1/packaging
 rm package1/*.py
 
-read -n 1 -p Continue?
 # delete all files except the .so from swig.
-#find package1 -type f | grep -v ".*(so|pyd)$" | xargs rm
+find package1 -type d -name __pycache__ -delete -print
+find package1 -maxdepth 2 -type f | grep -vP ".*(so|pyd|manifest)$" | xargs rm
 
 export PYTHONPATH=`pwd`
 cd ..
